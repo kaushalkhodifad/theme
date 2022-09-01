@@ -1,4 +1,4 @@
-SELECT
+WITH main as (SELECT
 	aa.store_id,
 	aa.store_name AS store_name,
 	aa.country,
@@ -11,7 +11,8 @@ SELECT
 	c.amount,
 	d.default_theme,
 	aa.name AS current_theme,
-	aa.theme_activation_date,
+	aa.theme_launch_date,
+	aa.first_time_activation_date,
 	aa.store_category_id,
 	aa.store_category,
 	aa.plan_name,
@@ -27,7 +28,8 @@ FROM ((
 			a.store_creation_date,
 			a.theme_id_st,
 			a.name,
-			a.theme_activation_date,
+			a.theme_launch_date,
+			a.first_time_activation_date,
 			a.store_category_id,
 			a.store_category,
 			b.plan_name,
@@ -35,12 +37,13 @@ FROM ((
 		FROM (
 			SELECT
 				s.created_at at time zone 'Asia/Kolkata' AS store_creation_date,
+				t.created_at at time zone 'Asia/Kolkata' AS theme_launch_date,
 				st.store_id,
 				s.name AS store_name,
 				c.name AS country,
 				t.id AS theme_id_st,
 				t.name,
-				(st.created_at at time zone 'Asia/Kolkata') AS theme_activation_date,
+				(st.created_at at time zone 'Asia/Kolkata') AS first_time_activation_date,
 				sc.id AS store_category_id,
 				sc.name AS store_category,
 				st.payment_done
@@ -55,9 +58,10 @@ FROM ((
 			--LEFT JOIN optimus_storecategorytheme sct ON sc.id = sct.category_id
 			--LEFT JOIN optimus_theme tt ON sct.theme_id = tt.id
 		WHERE
-			st.is_active IS TRUE
+			--st.is_active IS TRUE
 			--AND sct."default" IS TRUE
-			AND sm.test_store IS NOT TRUE) a
+		 sm.test_store IS NOT TRUE
+		AND t.is_active IS TRUE) a
 	LEFT JOIN (
 		SELECT
 			p.store_id, o.total_orders, o.GMV, p.total_products
@@ -109,4 +113,39 @@ FROM ((
 		WHERE
 			sct. "default" IS TRUE
 		ORDER BY
-			sct.category_id) d ON aa.store_category_id = d.category_id);
+			sct.category_id) d ON aa.store_category_id = d.category_id))
+			
+			SELECT
+	main.store_id,
+	main.store_name AS store_name,
+	main.country,
+	main.total_orders,
+	main.gmv,
+	main.total_products,
+	main.store_creation_date,
+	main.theme_id_st,
+	main.theme_id_swt,
+	main.amount,
+	main.default_theme,
+	main.current_theme,
+	main.theme_launch_date,
+	main.first_time_activation_date,
+	main.store_category_id,
+	main.store_category,
+	main.plan_name,
+	main.payment_done,
+	CASE WHEN ROUND(CAST(((EXTRACT(epoch FROM age(first_time_activation_date, theme_launch_date))) / (3600 * 24)) AS NUMERIC), 0) <= 30 THEN
+		1
+	ELSE
+		0
+	END AS M1, CASE WHEN ROUND(CAST(((EXTRACT(epoch FROM age(first_time_activation_date, theme_launch_date))) / (3600 * 24)) AS NUMERIC), 0) <= 60 THEN
+		1
+	ELSE
+		0
+	END AS M2, CASE WHEN ROUND(CAST(((EXTRACT(epoch FROM age(first_time_activation_date, theme_launch_date))) / (3600 * 24)) AS NUMERIC), 0) <= 90 THEN
+		1
+	ELSE
+		0
+	END AS M3
+FROM
+	main;
