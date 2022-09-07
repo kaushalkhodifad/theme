@@ -52,7 +52,7 @@ WITH main AS (
 					s.currency ->> 'symbol' AS currency_symbol,
 					t.id AS theme_id_st,
 					t.name,
-					t.is_active AS theme_is_active,
+					st.is_active AS theme_is_active,
 					(st.created_at at time zone 'Asia/Kolkata') AS first_time_activation_date,
 					sc.id AS store_category_id,
 					sc.name AS store_category,
@@ -157,16 +157,16 @@ SELECT
 		1
 	ELSE
 		0
-	END AS M1,
+	END AS "Upto 30 days",
 	CASE WHEN ROUND(CAST(((EXTRACT(epoch FROM age(first_time_activation_date, theme_launch_date))) / (3600 * 24)) AS NUMERIC), 0) <= 60 THEN
 		1
 	ELSE
 		0
-	END AS M2,
+	END AS "Upto 60 days",
 	CASE WHEN ROUND(CAST(((EXTRACT(epoch FROM age(first_time_activation_date, theme_launch_date))) / (3600 * 24)) AS NUMERIC), 0) <= 90 THEN
 		1
 	ELSE
 		0
-	END AS M3
+	END AS "Upto 90 days"
 FROM
 	main;
