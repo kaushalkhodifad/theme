@@ -146,7 +146,7 @@ SELECT
 	main.amount,
 	main.default_theme,
 	main.current_theme,
-	main.theme_is_active,
+	main.theme_is_active AS "Theme Active",
 	main.theme_launch_date,
 	main.first_time_activation_date,
 	main.store_category_id,
