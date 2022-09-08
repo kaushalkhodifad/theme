@@ -2,6 +2,7 @@ WITH main AS (
 	SELECT
 		aa.store_id,
 		aa.store_name AS store_name,
+		aa.store_deleted,
 		aa.country,
 		aa.country_currency,
 		aa.currency_symbol,
@@ -25,6 +26,7 @@ WITH main AS (
 			SELECT
 				a.store_id,
 				a.store_name,
+				a.store_deleted,
 				a.country,
 				a.country_currency,
 				a.currency_symbol,
@@ -47,6 +49,7 @@ WITH main AS (
 					t.created_at at time zone 'Asia/Kolkata' AS theme_launch_date,
 					st.store_id,
 					s.name AS store_name,
+					s.is_deleted AS store_deleted,
 					c.name AS country,
 					s.currency ->> 'cc' AS country_currency,
 					s.currency ->> 'symbol' AS currency_symbol,
@@ -134,6 +137,7 @@ WITH main AS (
 SELECT
 	main.store_id,
 	main.store_name AS store_name,
+	main.store_deleted,
 	main.country,
 	main.country_currency,
 	main.currency_symbol,
@@ -167,6 +171,7 @@ SELECT
 		1
 	ELSE
 		0
-	END AS "Upto 90 days"
+	END AS "Upto 90 days",
+	CURRENT_DATE
 FROM
 	main;
