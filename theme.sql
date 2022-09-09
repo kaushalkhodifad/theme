@@ -158,17 +158,17 @@ SELECT
 	main.plan_name,
 	main.payment_done,
 	CASE WHEN ROUND(CAST(((EXTRACT(epoch FROM age(first_time_activation_date, theme_launch_date))) / (3600 * 24)) AS NUMERIC), 0) <= 30 THEN
-		1
+		store_id
 	ELSE
 		0
 	END AS "Upto 30 days",
 	CASE WHEN ROUND(CAST(((EXTRACT(epoch FROM age(first_time_activation_date, theme_launch_date))) / (3600 * 24)) AS NUMERIC), 0) <= 60 THEN
-		1
+		store_id
 	ELSE
 		0
 	END AS "Upto 60 days",
 	CASE WHEN ROUND(CAST(((EXTRACT(epoch FROM age(first_time_activation_date, theme_launch_date))) / (3600 * 24)) AS NUMERIC), 0) <= 90 THEN
-		1
+		store_id
 	ELSE
 		0
 	END AS "Upto 90 days",
