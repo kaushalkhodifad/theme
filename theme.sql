@@ -106,7 +106,7 @@ WITH main AS (
 		LEFT JOIN (
 			SELECT
 				sp.store_id,
-				p.name AS plan_name
+				case when on_trial is true then 'Trial' else p.name end AS plan_name
 			FROM
 				optimus_storeplan sp
 				LEFT JOIN optimus_plan p ON sp.plan_id = p.id
