@@ -74,7 +74,8 @@ WITH main AS (
 				--st.is_active IS TRUE
 				--AND sct."default" IS TRUE
 				sm.test_store IS NOT TRUE
-				AND t.is_active IS TRUE) a
+-- 				AND t.is_active IS TRUE
+			) a
 		LEFT JOIN (
 			SELECT
 				p.store_id,
