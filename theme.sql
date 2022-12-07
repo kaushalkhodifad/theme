@@ -145,15 +145,15 @@ SELECT
 	main.total_orders,
 	main.gmv,
 	main.total_products,
-	main.store_creation_date,
+	main.store_creation_date::date,
 	main.theme_id_st,
 	main.theme_id_swt,
 	main.amount,
 	main.default_theme,
 	main.current_theme,
 	main.theme_is_active AS "Theme Active",
-	main.theme_launch_date,
-	main.first_time_activation_date,
+	main.theme_launch_date::date,
+	main.first_time_activation_date::date,
 	main.store_category_id,
 	main.store_category,
 	main.plan_name,
@@ -173,6 +173,6 @@ SELECT
 	ELSE
 		0
 	END AS "Upto 90 days",
-	CURRENT_DATE
+	cast(now() at time zone 'Asia/kolkata' as date) as current_date
 FROM
 	main;
