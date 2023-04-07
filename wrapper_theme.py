@@ -12,7 +12,7 @@ from sqlalchemy.sql.expression import false
 import datetime
 import json
 # from db_details import *
-# from db_credentials import *
+from db_credentials import *
 
 def main():
     try:
